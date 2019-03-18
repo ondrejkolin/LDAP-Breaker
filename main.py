@@ -128,7 +128,7 @@ def main():
                 except KeyError:
                         raise Exception("Attribute {} is already present! For rewriting attributes use another function.".format(attribute))
 
-            if not len(content.key()):
+            if not len(content.keys()):
                 if REMOVE_WHEN_ZERO_ATTRS:
                     log('Removing {} because it has no attribute left. Rest in piece(s)'.format(cn), 6)
                     return
@@ -161,7 +161,7 @@ def main():
     import sys
     import os
 
-    parser = argparse.ArgumentParser(description='LDIF Parser')
+    parser = argparse.ArgumentParser(description='LDIF manipulation program. Please check full in')
     parser.add_argument('-i', '--input', metavar='input', type=str, required=True,
                         help='Ldif file to be proceed')
     parser.add_argument('-o', '--output', metavar='output', type=str, required=False, default=None,
