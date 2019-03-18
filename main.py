@@ -62,6 +62,11 @@ def main():
             to_be_removed = []
             watchdog_result = True
             for key in content.keys():
+                if len(ATTRIBUTES_LIST) and key not in ATTRIBUTES_LIST:
+                    log ("Based on attributes list removing attribute {} ".format(key),3)
+                    to_be_removed.append(key)
+
+
                 for banned in FILTERED_ATTRIBUTES:
                     pattern = re.compile("^" + str(banned) + "$")
                     if pattern.match(key) is not None:
@@ -101,8 +106,12 @@ def main():
                             log("Removing {} due to watchdog results".format(cn), 1)
 
             for remove in to_be_removed:
-                content.pop(remove)
-                log("Removing attribute: {}".format(remove), 4)
+                try:
+                    content.pop(remove)
+                    log("Removing attribute: {}".format(remove), 4)
+                except KeyError:
+                    log("Failed to remove {}, already removed?".format(remove), 9)
+
             if watchdog_result and WATCHDOG_STRICT:
                 log("Watchdog blocked")
                 return
@@ -118,6 +127,15 @@ def main():
                         content[attribute] = value
                 except KeyError:
                         raise Exception("Attribute {} is already present! For rewriting attributes use another function.".format(attribute))
+
+            if not len(content.key()):
+                if REMOVE_WHEN_ZERO_ATTRS:
+                    log('Removing {} because it has no attribute left. Rest in piece(s)'.format(cn), 6)
+                    return
+                log('Please notice, that {} has no attributes!'.format(cn), 2)
+
+
+
 
             log(content, 9)
             OUTPUT_FILE.unparse(cn, content)
@@ -164,6 +182,11 @@ def main():
                         help='Watch attributes with values matching regexp. Prepending the expression with \'^\' checks if the string does not match.\nUsage: \nuserClass:[Tt]roll\n^userPassword:{CRYPT}')
     parser.add_argument('-ww', metavar="watchdog_strict", type=bool, required=False, default=None,
                         help="Delete after watchdog match? True/False")
+    parser.add_argument('-l', '--list', metavar='list', type=str, nargs="+", required=False, default = [],
+                        help='List of allowed attributes. Other attributes will be therefore removed')
+    parser.add_argument('-z', '--zero', metavar='zero', type=bool, required=False, default = False,
+                        help='Remove object with zero attributes?')
+
 
     args = parser.parse_args()
     input_file = open(args.input, "r")
@@ -202,6 +225,13 @@ def main():
         NEW_ATTRIBUTES =  [item.split(":", 1) for item in args.new]
     except KeyError:
         log("Attribute creation error! Check the help -h", 0)
+    try:
+        ATTRIBUTES_LIST = args.list
+    except KeyError:
+       log("Error when parsing allowed attributes list, check your syntax")
+
+    REMOVE_WHEN_ZERO_ATTRS = True
+
 
 
 
