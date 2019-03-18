@@ -8,7 +8,7 @@ Distributed with no warranty and under GNU GPL v3
 ## Usage
 `./main.py -i /home/user/ldap-data/database.ldif -r ',ou=aclroles,dc=ldap,dc=example,dc=com'`
 <br> -i input file
-<br> -r restrict search domain, using a comma makes sure you don't get the main ou (ou=people,dc=ldap,dc=example,dc=com) ]
+<br> -r restrict search domain, using a comma makes sure you don't get the main ou (ou=people,dc=ldap,dc=example,dc=com)
 
 `./main.py -i /home/user/ldap-data/database.ldif -r ,ou=people,dc=ldap,dc=example,dc=com -f gosaAccount gosaUserTemplate samba.* -a samba.*  gosaSpam.* -v 1`
 <br> -f remove objectClass based on regexp
