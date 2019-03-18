@@ -23,12 +23,16 @@ Distributed with no warranty and under GNU GPL v3
 <br> -s replace attribute value to new value. Works on arrays. Syntax is: attrribute:old_value|new_value
 <br> -n create new attributes on all records. Syntax is: attribute:value
 
+`./main.py -i /home/user/ldap-data/database.ldif -r ou=group,ou=systems,dc=ldap,dc=example,dc=com -l memberUid -z
+<br> -l limit attributes only to `memberUid`
+<br> -z if any records has no attributes before printing out (after filtering) it won't be stated. 
 ## `./main.py --help`
 ```
-usage: main.py [-h] -i input [-o output] [-r restrict]
+usage: usage: main.py [-h] -i input [-o output] [-r restrict]
                [-s substitute [substitute ...]] [-f filter [filter ...]]
                [-a attributes [attributes ...]] [-n new [new ...]]
                [-v verbosity] [-w watch [watch ...]] [-ww watchdog_strict]
+               [-l list [list ...]] [-z zero]
 
 LDIF Parser
 
@@ -46,4 +50,24 @@ optional arguments:
                         Substitutes matched attribute:key values for desired
                         value. Syntax "attribute:old_value|new_value"
   -f filter [filter ...], --filter filter [filter ...]
+                        ObjectClass filter which will be removed from the user
+  -a attributes [attributes ...], --attributes attributes [attributes ...]
+                        Attributes filter which will be removed from the user
+  -n new [new ...], --new new [new ...]
+                        Attributes which needs to be added, appends to
+                        existings lists. Syntax "attribute:value"
+  -v verbosity, --verbosity verbosity
+                        Configure the verbosity level, 0 is nothing, 10 is a
+                        lot
+  -w watch [watch ...], --watch watch [watch ...]
+                        Watch attributes with values matching regexp.
+                        Prepending the expression with '^' checks if the
+                        string does not match. Usage: userClass:[Tt]roll
+                        ^userPassword:{CRYPT}
+  -ww watchdog_strict   Delete after watchdog match? True/False
+  -l list [list ...], --list list [list ...]
+                        List of allowed attributes. Other attributes will be
+                        therefore removed
+  -z zero, --zero zero  Remove object with zero attributes?
+
 ```
